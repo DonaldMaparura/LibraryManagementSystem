@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librarian Dashboard</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: #f2f2f2;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+        }
+        .tab.active {
+            background-color: #fff;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .reports-button {
+            background-color: #007bff; /* Blue color for reports button */
+            color: #fff;
+        }
+
+        .reports-button:hover {
+            background-color: #0056b3; /* Darker blue color on hover */
+        }
+
+        .logout-button {
+            background-color: #dc3545; /* Red color for logout button */
+            color: #fff;
+        }
+
+        .logout-button:hover {
+            background-color: #bd2130; /* Darker red color on hover */
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .buttons-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Librarian Dashboard</h1>
+
+    <!-- Tabs navigation -->
+    <div class="tabs">
+        <div class="tab" onclick="changeTab('add_member')">Add Member</div>
+        <div class="tab" onclick="changeTab('remove_member')">Remove Member</div>
+        <div class="tab" onclick="changeTab('borrow_book')">Borrow Book</div>
+        <div class="tab" onclick="changeTab('return_book')">Return Book</div>
+        <div class="tab" onclick="changeTab('add_books')">Add Books</div>
+        <div class="tab" onclick="changeTab('remove_books')">Remove Books</div>
+    </div>
+
+    <!-- Add Member Form -->
+    <div id="add_member" class="tab-content">
+        <h2>Add Member</h2>
+        <form action="/add-member" method="get" th:action="@{/add-member}" th:object="${members}">
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" name="fullName" th:value="${fullName}" required><br>
+            <label for="idNumber">ID Number:</label><br>
+            <input type="text" id="idNumber" name="idNumber" th:value="${idNumber}" required><br>
+            <label for="address">Address:</label><br>
+            <input type="text" id="address" name="address" th:value="${address}" required><br>
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" th:value="${email}" required><br>
+            <label for="phoneNumber">Phone Number:</label><br>
+            <input type="text" id="phoneNumber" name="phoneNumber" th:value="${phoneNumber}" required><br>
+            <label for="age">Age:</label><br>
+            <input type="text" id="age" name="age" th:value="${age}" required><br><br>
+            <input type="submit" value="Add Member">
+        </form>
+
+    </div>
+
+    <!-- Remove Member Form -->
+    <div id="remove_member" class="tab-content">
+        <h2>Remove Member</h2>
+        <form action="/remove-member" method="get" th:action="@{/remove-member}" th:object="${removeMember}">
+            <label for="email">Member Email Address:</label><br>
+            <input type="email" id="email" name="email" th:value="${email}" required><br>
+            <input type="submit" value="Remove Member">
+        </form>
+    </div>
+    <!-- Borrow Book Form -->
+    <div id="borrow_book" class="tab-content">
+        <h2>Borrow Book</h2>
+
+        <form action="/borrow-book" method="get"  th:action="@{/borrow-book}" th:object="${BorrowBook}">
+            <label for="bookTitle">Book Title:</label><br>
+            <input type="text" id="bookTitle" name="bookTitle" th:value="${bookTitle}" required><br>
+            <label for="bookCopyID">Book Copy ID:</label><br>
+            <input type="text" id="bookCopyID" name="bookCopyID" th:value="${bookCopyID}" required><br>
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" th:value="${email}"required><br>
+            <label for="bookBorrowedDate">Borrowed Date:</label><br>
+            <input type="date" id="bookBorrowedDate" name="bookBorrowedDate" th:value="${bookBorrowedDate}" required><br>
+            <label for="bookDueDate">Due Date:</label><br>
+            <input type="date" id="bookDueDate" name="bookDueDate" th:value="${bookDueDate}" required><br><br>
+            <input type="submit" value="Borrow Book">
+        </form>
+    </div>
+
+    <!-- Return Book Form -->
+    <div id="return_book" class="tab-content">
+        <h2>Return Book</h2>
+        <form action="/return-book" method="get" th:action="@{/return-book}" th:object="${returnBook}">
+            <label for="bookCopyID">Book Copy ID:</label><br>
+            <input type="text" id="bookCopyID" name="bookCopyID" th:value="${bookCopyID}" required><br>
+            <label for="returnedDate">Returned Date:</label><br>
+            <input type="date" id="returnedDate" name="returnedDate" th:value="${returnedDate}" required><br>
+            <input type="submit" value="Return Book">
+        </form>
+    </div>
+    <div id="add_books" class="tab-content">
+        <h2>Add Books</h2>
+        <form action="/add-books" method="get" th:action="@{/add-books}" th:object="${books}">
+            <label for="bookTitle">Book Title:</label><br>
+            <input type="text" id="bookTitle" name="bookTitle" th:value="${bookTitle}" required><br>
+            <label for="bookID">Book ID:</label><br>
+            <input type="text" id="bookID" name="bookID" th:value="${bookID}" required><br>
+            <label for="bookCopyID">Book Copy ID:</label><br>
+            <input type="text" id="bookCopyID" name="bookCopyID" th:value="${bookCopyID}" required><br>
+            <label for="yearPublished">Year Published:</label><br>
+            <input type="date" id="yearPublished" name="yearPublished" th:value="${yearPublished}" required><br><br>
+            <input type="submit" value="Add Books">
+        </form>
+    </div>
+    <!-- Remove Books Form -->
+    <div id="remove_books" class="tab-content">
+        <h2>Remove Books</h2>
+        <form action="/remove-books" method="get" th:action="@{/remove-books}" th:object="${removeBooks}">
+            <label for="bookCopyID">Book Copy ID:</label><br>
+            <input type="text" id="bookCopyID" name="bookCopyID" th:value="${bookCopyID}" required><br>
+            <input type="submit" value="Remove Book">
+        </form>
+    </div>
+    <!-- Buttons Section -->
+    <div class="buttons-section">
+        <!-- Reports Button -->
+        <a href="/reports" class="button reports-button">Reports</a>
+        <!-- Logout Button -->
+        <a href="/adminLogin" class="button logout-button">Logout</a>
+    </div>
+
+    <!-- Popup message -->
+    <div id="popup" class="popup" th:if="${message}" th:text="${message}"></div>
+</div>
+
+<script th:inline="javascript">
+    function showPopup(message){
+        var popup = document.getElementById('popup');
+        popup.style.display = 'block';
+        popup.innerText = message;
+
+        setTimeout(function() {
+            popup.style.display = 'none';
+        },3000);}
+
+    function changeTab(tabId) {
+
+
+        // Hide all tab contents
+        var tabContents = document.getElementsByClassName("tab-content");
+
+
+        for (var i = 0; i < tabContents.length; i++) {
+            tabContents[i].classList.remove("active");
+        }
+
+        // Deactivate all tabs
+        var tabs = document.getElementsByClassName("tab");
+        for (var i = 0; i < tabs.length; i++) {
+            tabs[i].classList.remove("active");
+        }
+
+        // Show the selected tab content
+        document.getElementById(tabId).classList.add("active");
+
+        // Activate the selected tab
+        document.querySelector("[onclick*='" + tabId + "']").classList.add("active");
+    }
+    showPopup(/*[[${message}]]*/);
+
+    // auth.js
+
+    // auth.js
+
+    // Function to handle admin login form submission
+    function handleAdminLoginFormSubmit(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const username = formData.get('username');
+        const password = formData.get('password');
+
+        // Perform login request to the server
+        login('/admin-login', username, password);
+    }
+
+    // Function to handle admin registration form submission
+    function handleAdminRegFormSubmit(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const username = formData.get('username');
+        const email = formData.get('email');
+        const password = formData.get('password');
+
+        // Perform registration request to the server
+        register('/admin-register', username, email, password);
+    }
+
+    // Function to perform login request
+    async function login(endpoint, username, password) {
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (response.ok) {
+                // Redirect to the dashboard after successful login
+                window.location.href = '/dashboard';
+            } else {
+                // Handle login failure (e.g., display error message)
+                console.error('Login failed');
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+        }
+    }
+
+    // Function to perform registration request
+    async function register(endpoint, username, email, password) {
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            if (response.ok) {
+                // Redirect to the dashboard after successful registration
+                window.location.href = '/dashboard';
+            } else {
+                // Handle registration failure (e.g., display error message)
+                console.error('Registration failed');
+            }
+        } catch (error) {
+            console.error('Error during registration:', error);
+        }
+    }
+
+    // Add event listeners to admin login and registration forms
+    document.getElementById('adminLoginForm').addEventListener('submit', handleAdminLoginFormSubmit);
+    document.getElementById('adminRegForm').addEventListener('submit', handleAdminRegFormSubmit);
+
+</script>
+</body>
+</html>

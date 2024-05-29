@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Reports</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: #f2f2f2;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+        }
+        .tab.active {
+            background-color: #fff;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff; /* Blue color */
+            color: #fff; /* White text color */
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px; /* Distance from top */
+            right: 10px; /* Distance from right */
+        }
+
+        .button:hover {
+            background-color: #0056b3; /* Darker blue color on hover */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Library Reports</h1>
+
+    <div class="tabs">
+        <div class="tab" onclick="changeTab('members')">Members</div>
+        <div class="tab" onclick="changeTab('books')">Books</div>
+        <div class="tab" onclick="changeTab('borrowed_books')">Books Borrowed</div>
+    </div>
+
+    <div id="members" class="tab-content">
+        <h2>Members Report</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>ID Number</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Age</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${members}">
+                <td th:text="${member.fullName}"></td>
+                <td th:text="${member.idNumber}"></td>
+                <td th:text="${member.address}"></td>
+                <td th:text="${member.email}"></td>
+                <td th:text="${member.phoneNumber}"></td>
+                <td th:text="${member.age}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="books" class="tab-content">
+        <h2>Books Report</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Book ID</th>
+                <th>Books Copy ID</th>
+                <th>Year Published</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="book : ${books}">
+                <td th:text="${book.bookTitle}"></td>
+                <td th:text="${book.bookID}"></td>
+                <td th:text="${book.bookCopyID}"></td>
+                <td th:text="${book.yearPublished}"></td>
+                <td th:text="${book.status}"></td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div id="borrowed_books" class="tab-content">
+        <h2>Books Borrowed Report</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Book Copy ID</th>
+                <th>Email</th>
+                <th>Borrowed Date</th>
+                <th>Due Date</th>
+                <th>Returned Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="book : ${borrowedBooks}">
+                <td th:text="${book.bookTitle}"></td>
+                <td th:text="${book.bookCopyID}"></td>
+                <td th:text="${book.email}"></td>
+                <td th:text="${book.bookBorrowedDate}"></td>
+                <td th:text="${book.bookDueDate}"></td>
+                <td th:text="${book.returnDate}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <a href="/dashboard" class="button">Back to Dashboard</a>
+</div>
+
+<script>
+    function changeTab(tabId) {
+        // Hide all tab contents
+        var tabContents = document.getElementsByClassName("tab-content");
+        for (var i = 0; i < tabContents.length; i++) {
+            tabContents[i].classList.remove("active");
+        }
+
+        // Deactivate all tabs
+        var tabs = document.getElementsByClassName("tab");
+        for (var i = 0; i < tabs.length; i++) {
+            tabs[i].classList.remove("active");
+        }
+
+        // Show the selected tab content
+        document.getElementById(tabId).classList.add("active");
+
+        // Activate the selected tab
+        document.querySelector("[onclick*='" + tabId + "']").classList.add("active");
+    }
+    // auth.js
+
+    // auth.js
+
+    // Function to handle admin login form submission
+    function handleAdminLoginFormSubmit(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const username = formData.get('username');
+        const password = formData.get('password');
+
+        // Perform login request to the server
+        login('/admin-login', username, password);
+    }
+
+    // Function to handle admin registration form submission
+    function handleAdminRegFormSubmit(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const username = formData.get('username');
+        const email = formData.get('email');
+        const password = formData.get('password');
+
+        // Perform registration request to the server
+        register('/admin-register', username, email, password);
+    }
+
+    // Function to perform login request
+    async function login(endpoint, username, password) {
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (response.ok) {
+                // Redirect to the dashboard after successful login
+                window.location.href = '/dashboard';
+            } else {
+                // Handle login failure (e.g., display error message)
+                console.error('Login failed');
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+        }
+    }
+
+    // Function to perform registration request
+    async function register(endpoint, username, email, password) {
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            if (response.ok) {
+                // Redirect to the dashboard after successful registration
+                window.location.href = '/dashboard';
+            } else {
+                // Handle registration failure (e.g., display error message)
+                console.error('Registration failed');
+            }
+        } catch (error) {
+            console.error('Error during registration:', error);
+        }
+    }
+
+    // Add event listeners to admin login and registration forms
+    document.getElementById('adminLoginForm').addEventListener('submit', handleAdminLoginFormSubmit);
+    document.getElementById('adminRegForm').addEventListener('submit', handleAdminRegFormSubmit);
+
+</script>
+</body>
+</html>

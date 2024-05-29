@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librarian Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="text"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            text-align: center;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .register-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .register-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Admin Registration</h2>
+    <form action="/adminRegForm" method="get" th:action="@{/adminRegForm}" th:object="${admin}">
+        <input type="text" th:field="*{name}" placeholder="Full Name" required>
+        <input type="email" th:field="*{email}" placeholder="Email" required>
+        <input type="text" th:field="*{phoneNumber}" placeholder="Phone Number" required>
+        <input type="password" th:field="*{password}" placeholder="Password" required>
+        <input type="submit" value="Register" class="register-button">
+        <p>Already have an account? <a href="adminLogin">Login here</a>.</p>
+    </form>
+    <div id="popup" class="popup" th:if="${message}" th:text="${message}"></div>
+</div>
+<script>
+    // auth.js
+
+    // auth.js
+
+    // Function to handle admin login form submission
+    function handleAdminLoginFormSubmit(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const username = formData.get('username');
+        const password = formData.get('password');
+
+        // Perform login request to the server
+        login('/admin-login', username, password);
+    }
+
+    // Function to handle admin registration form submission
+    function handleAdminRegFormSubmit(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const username = formData.get('username');
+        const email = formData.get('email');
+        const password = formData.get('password');
+
+        // Perform registration request to the server
+        register('/admin-register', username, email, password);
+    }
+
+    // Function to perform login request
+    async function login(endpoint, username, password) {
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (response.ok) {
+                // Redirect to the dashboard after successful login
+                window.location.href = '/dashboard';
+            } else {
+                // Handle login failure (e.g., display error message)
+                console.error('Login failed');
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+        }
+    }
+
+    // Function to perform registration request
+    async function register(endpoint, username, email, password) {
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            if (response.ok) {
+                // Redirect to the dashboard after successful registration
+                window.location.href = '/dashboard';
+            } else {
+                // Handle registration failure (e.g., display error message)
+                console.error('Registration failed');
+            }
+        } catch (error) {
+            console.error('Error during registration:', error);
+        }
+    }
+
+    // Add event listeners to admin login and registration forms
+    document.getElementById('adminLoginForm').addEventListener('submit', handleAdminLoginFormSubmit);
+    document.getElementById('adminRegForm').addEventListener('submit', handleAdminRegFormSubmit);
+
+</script>
+</body>
+</html>
